@@ -1,22 +1,11 @@
 /************************   printmatrix.c ********************************/
 #include "include.h"
+#include "printmatrix.h"
 
-//colors
-#define KNRM  "\x1B[0m"
-#define KRED  "\x1B[31m"
-#define KGRN  "\x1B[32m"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KMAG  "\x1B[35m"
-#define KCYN  "\x1B[36m"
-#define KWHT  "\x1B[37m"
-#define RESET "\033[0m"
-
-#define COLOR_SCALE 0.3
-
+char * color(artype phi);
 
 void printmatrix(artype phi[L][L])
-{
+{	/* Prints out the field state and sleeps 1 sec */
 	int n1,n2;
 	printf("Field State:\n");
 	for(n1=0; n1<L;n1++){
@@ -25,10 +14,24 @@ void printmatrix(artype phi[L][L])
 		}
 		printf("\n\n");
 	}
+	sleep(1);
 }
 
-void printmatrixColor(artype phi[L][L], int n1in, int n2in)
-{
+void printmatrixColor(artype phi[L][L])
+{	/* Prints out the field state in color mode and sleeps 1 sec */
+	int n1,n2;
+	printf("Field State:\n");
+	for(n1=0; n1<L;n1++){
+		for(n2=0; n2<L; n2++){
+			printf("%s%5.1f%s", color(phi[n1][n2]), phi[n1][n2], RESET);;
+		}
+		printf("\n\n");
+	}
+	sleep(1);
+}
+
+void printmatrixColorPoint(artype phi[L][L], int n1in, int n2in)
+{	/* Prints out the field state in color mode redening a specific point */
 	int n1,n2;
 	printf("Field State:\n");
 	for(n1=0; n1<L;n1++){
@@ -43,7 +46,7 @@ void printmatrixColor(artype phi[L][L], int n1in, int n2in)
 }
 
 char * color(artype phi){
-	
+	/* Sets the color in accordance to the field's value */
 	if (phi<(-2*COLOR_SCALE*D_Phi)) { return (KYEL); }
 	else if (phi < -COLOR_SCALE*D_Phi) { return (KGRN); }
 	else if (phi < COLOR_SCALE*D_Phi) { return (RESET); }

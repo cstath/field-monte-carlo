@@ -1,19 +1,16 @@
 /************************   main.c ********************************/
 #include "include.h"
+#include "printmatrix.h"
 
 int main(int argc, char **argv){
 
-	acceptedstates=0;
-	dropedstates=0;
 	int start=0;
 	int isweep,nsweep = 1000;
-//beta=0.21;
+	//beta=0.21;
 	seed=9873;
-	start=0;
+	start=1;
 
-
-
-// Create a field
+	// Create a field
 	artype phi[L][L];
 
 	// initialize field

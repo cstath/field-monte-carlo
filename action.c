@@ -1,9 +1,11 @@
-/************************   s.c *********************************/
+/************************  action.c *********************************/
 #include "include.h"
+#include "action.h"
 
-// Calculate the action of a field state phi
+artype twoxSn(artype [L][L], int n1, int n2);
+
 double Saction(artype phi[L][L] )
-{	
+{	/* Calculates the action of a field state phi */
 	int n1,n2;
 	artype sum = 0;
 
