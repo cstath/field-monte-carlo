@@ -3,31 +3,44 @@
 #include "action.h"
 #include "printmatrix.h"
 
+#define PRINT_CMPLX(x) printf("%.15f%+.15fi\n", creal(x), cimag(x))
+
 void met(artype phi[L][L])
 {	/* Performs a metropolis algorithm sweep */
 	int n1, n2, k;
-	artype newvalue, s1, s2, delta;
+	artype newvalue;
+	artype s1, s2, deltacomplex, difference;
+	double delta;
 	static int acceptedstates=0, dropedstates=0;
 
 	for(k=0;k<N;k++){
-		//pick a random site n1,n2
+			//pick a random site n1,n2
 		n1 = L*drandom(); 
 		n2 = L*drandom();
 	
 		// New value for the field phi at site n1,n2. phi -> phi+D_phi
-		newvalue = phi[n1][n2] + D_Phi*(2*drandom()-1); // or RANDSIGN;
+		newvalue = phi[n1][n2] + D_Phi*( (2*drandom()-1) + (2*drandom()-1)*I ) ; // or RANDSIGN;
 
 		// Calculate change in action between the new and the old field state
-		delta = deltaS(phi, newvalue, n1, n2);
+		deltacomplex = deltaS(phi, newvalue, n1, n2);
+		delta = creal(deltacomplex);
 
-		/*phi2[n1][n2] = newvalue;
+		printf("deltacomplex: ");
+		PRINT_CMPLX(deltacomplex);
+		phi2[n1][n2] = newvalue;
 		s1=Saction(phi);
 		s2=Saction(phi2);
-		printf("Phi\n");
-		printf("s1: %d\n\n", s1);
-		printf("Phi2\n");
-		printf("s2: %d\n\n", s2);
-		printf("s1: %d\ns2: %d\ndifference: %d\n\n", s1, s2, s2-s1);*/
+		printf("Phi s1: ");
+		PRINT_CMPLX(s1);
+		printf("Phi2 s2: ");
+		PRINT_CMPLX(s2);
+		printf("difference: ");
+		difference=s2-s1;
+		PRINT_CMPLX(difference);
+		printf("difference of differences: ");
+		PRINT_CMPLX(deltacomplex-difference);
+
+		if (cabs(deltacomplex-difference)>10e-7) printf("-------------WRONG DIAFORETIKES TIMES DIAFORAS DRASIS!!!---------------\n");
 		
 		// Decide whether the new state is to be accepted or not
 		if ( (delta <=0 ) || (drandom()<exp(-delta)) )
@@ -40,7 +53,7 @@ void met(artype phi[L][L])
 		} 
 		else
 		{ 	// Not accepted
-			//phi2[n1][n2] = phi[n1][n2];
+			phi2[n1][n2] = phi[n1][n2];
 			dropedstates++;
 		}
 

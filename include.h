@@ -4,25 +4,28 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <complex.h>
 #include <math.h>
 #include <unistd.h>
 
-#define VERBOSE_MODE
+//#define VERBOSE_MODE
 
-#define L 12
+#define L 8
 #define N (L*L)
 #define M 1
-#define D_Phi 1
+#define D_Phi 0.5
 //#define artype double // int/float/double , for int check RANDSIGN also.
 
-#define wrap(x) ((((x) % L) + L) % L)
+
 #define pwr2(x) ( (x)*(x) )
-//#define sign(x) (((x) > 0) - ((x) < 0))
+#define SIGN(x) (((x) > 0) - ((x) < 0))
 #define RANDSIGN ( (drandom() > 0.5) ? (1) : (-1) )
 
-typedef double artype;
+typedef double complex artype;
 
 double beta;
+
+artype phi2[L][L];
 
 double drandom();
 long seed;

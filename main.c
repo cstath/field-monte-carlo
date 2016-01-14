@@ -8,7 +8,7 @@ int main(int argc, char **argv){
 	int isweep,nsweep = 1000;
 	//beta=0.21;
 	seed=9873;
-	start=1;
+	start=0;
 
 	// Create a field
 	artype phi[L][L];
