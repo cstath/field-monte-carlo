@@ -8,12 +8,12 @@
 #include <math.h>
 #include <unistd.h>
 
-//#define VERBOSE_MODE
+#define VERBOSE_MODE
 
-#define L 8
-#define N (L*L)
+#define L 6
+#define N (L*L*L*L)
 #define M 1
-#define D_Phi 0.5
+#define D_Phi 0.3
 //#define artype double // int/float/double , for int check RANDSIGN also.
 
 
@@ -25,12 +25,12 @@ typedef double complex artype;
 
 double beta;
 
-artype phi2[L][L];
+artype phi2[L][L][L][L];
 
 double drandom();
 long seed;
-void init(int start, artype phi[L][L]); 
-void met(artype phi[L][L]); 
-void measure(artype phi[L][L]);
+void init(int start, artype phi[L][L][L][L]); 
+void met(artype phi[L][L][L][L]); 
+void measure(artype phi[L][L][L][L]);
 
 #endif

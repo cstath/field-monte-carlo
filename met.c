@@ -5,9 +5,9 @@
 
 #define PRINT_CMPLX(x) printf("%.15f%+.15fi\n", creal(x), cimag(x))
 
-void met(artype phi[L][L])
+void met(artype phi[L][L][L][L])
 {	/* Performs a metropolis algorithm sweep */
-	int n1, n2, k;
+	int n1, n2, n3, n4, k;
 	artype newvalue;
 	artype s1, s2, deltacomplex, difference;
 	double delta;
@@ -17,17 +17,19 @@ void met(artype phi[L][L])
 			//pick a random site n1,n2
 		n1 = L*drandom(); 
 		n2 = L*drandom();
+		n3 = L*drandom(); 
+		n4 = L*drandom();
 	
 		// New value for the field phi at site n1,n2. phi -> phi+D_phi
-		newvalue = phi[n1][n2] + D_Phi*( (2*drandom()-1) + (2*drandom()-1)*I ) ; // or RANDSIGN;
+		newvalue = phi[n1][n2][n3][n4] + D_Phi*( (2*drandom()-1) + (2*drandom()-1)*I ) ; // or RANDSIGN;
 
 		// Calculate change in action between the new and the old field state
-		deltacomplex = deltaS(phi, newvalue, n1, n2);
+		deltacomplex = deltaS(phi, newvalue, n1, n2, n3, n4);
 		delta = creal(deltacomplex);
 
 		printf("deltacomplex: ");
 		PRINT_CMPLX(deltacomplex);
-		phi2[n1][n2] = newvalue;
+		phi2[n1][n2][n3][n4] = newvalue;
 		s1=Saction(phi);
 		s2=Saction(phi2);
 		printf("Phi s1: ");
@@ -45,15 +47,15 @@ void met(artype phi[L][L])
 		// Decide whether the new state is to be accepted or not
 		if ( (delta <=0 ) || (drandom()<exp(-delta)) )
 		{ 	// Accepted!
-			phi[n1][n2] = newvalue; 
+			phi[n1][n2][n3][n4] = newvalue; 
 			acceptedstates++;
 			#ifdef VERBOSE_MODE
-			printmatrixColorPoint(phi, n1, n2);
+			printmatrixColorPoint(phi, n1, n2, n3, n4);
 			#endif
 		} 
 		else
 		{ 	// Not accepted
-			phi2[n1][n2] = phi[n1][n2];
+			phi2[n1][n2][n3][n4] = phi[n1][n2][n3][n4];
 			dropedstates++;
 		}
 

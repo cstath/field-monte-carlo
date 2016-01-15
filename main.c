@@ -1,6 +1,5 @@
 /************************   main.c ********************************/
 #include "include.h"
-#include "printmatrix.h"
 
 int main(int argc, char **argv){
 
@@ -10,8 +9,8 @@ int main(int argc, char **argv){
 	seed=9873;
 	start=0;
 
-	// Create a field
-	artype phi[L][L];
+	// Create a field / maybe use malloc instead
+	artype phi[L][L][L][L];
 
 	// initialize field
 	init(start, phi);

@@ -15,8 +15,8 @@
 #define COLOR_SCALE 0.3
 
 /* prototypes */
-void printmatrix(artype phi[L][L]);
-void printmatrixColor(artype phi[L][L]);
-void printmatrixColorPoint(artype phi[L][L], int n1, int n2);
+void printmatrix(artype phi[L][L][L][L]);
+void printmatrixColor(artype phi[L][L][L][L]);
+void printmatrixColorPoint(artype phi[L][L][L][L], int n1, int n2, int n3, int n4);
 
 #endif
