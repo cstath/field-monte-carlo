@@ -1,5 +1,6 @@
 /************************   printmatrix.c ********************************/
 #include "include.h"
+#include "fields.h"
 #include "printmatrix.h"
 
 #define PRINT_CMPLX(x) printf("%4.1f%+.1fi", creal(x), cimag(x))
