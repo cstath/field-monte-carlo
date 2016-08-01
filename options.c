@@ -1,43 +1,38 @@
-/************************ options.c ***********************************/
-#include "include.h"
-#include "fields.h"
+/************************ options.c ************************/
 #include "options.h"
-
 
 char prog[1024];
 
 /*Get the options function: See "man 3 getopt" for usage*/
 /*Option letters are defined with this string*/
-//#define OPTARGS  "hL:s:S:n:"
-#define OPTARGS  "hL:m:s:S:c:n:d:"
-void get_the_options(int argc,char **argv){
+#define OPTARGS  "hL:m:s:S:n:d:"
+options get_the_options(int argc,char **argv){
   int c,errflg = 0;
+
+  options shelloptions;
 
   if (argc==1) usage();
   
   strcpy(prog,(char *)basename(argv[0]));
   while (!errflg && (c = getopt(argc, argv, OPTARGS)) != -1){
     switch(c){
-    // case 'L':
-    //   L      = atoi(optarg);
-    //   break;
+      case 'L':
+      shelloptions.L  = atoi(optarg);
+      break;
     case 's':
-      start  = atoi(optarg);
+      shelloptions.start  = atoi(optarg);
       break;
     case 'S':
-      seed   = atol(optarg);
+      shelloptions.seed   = atol(optarg);
       break;
     case 'n':
-      nmeasurement = atoi(optarg);
-      break;
-    case 'c':
-      nsweep = atoi(optarg);
+      shelloptions.nmeasurements = atoi(optarg);
       break;
     case 'm':
-      MU = atof(optarg);
+      shelloptions.MU = atof(optarg);
       break;
     case 'd':
-      silent = atoi(optarg);
+      shelloptions.silent = atoi(optarg);
       break;
     case 'h':
       errflg++;/*call usage*/
@@ -47,56 +42,73 @@ void get_the_options(int argc,char **argv){
     }/*switch*/
     if(errflg) usage();
   }/*while...*/
+
+  // Check to see if the shell options given are valid
+  if(shelloptions.L     <  1 )
+    locerr("L has not been set."   );
+  if(shelloptions.start  < 0 || shelloptions.start > 1)
+    locerr("start has not been set.");
+  if(shelloptions.seed  <  0 )
+    locerr("seed has not been set.");
+  if(shelloptions.MU    <  0 )
+    locerr("MU has not been set.");
+  if(shelloptions.nmeasurements < 0 )
+    locerr("nmeasurement has not been set");
+
+  // set global variables
+  silent = shelloptions.silent;
+  seed = shelloptions.seed;
+
+  // print out simulation message
+  if (!shelloptions.silent) simmessage(stdout, shelloptions);
+  return shelloptions;
 }/*get_the_options()*/
-/* --------------------------  usage() ----------------------------- */
+
+/* --------------------------  usage() ------------------------ */
 void usage(){
   /*Careful: New lines end with \n\ : No space after last backslacsh
     indicates line is broken....*/
   fprintf(stderr,"\
-Usage: %s  [options]                                                \n\
-       -m: mu (chemical potential)                                  \n\
-       -s: start (0 cold, 1 hot)                                    \n\
-       -S: seed  (options seed overrides the one in config)         \n\
-       -c: number of sweeps per measurement of <Phi^2> and <n>      \n\
-       -n: number of measurements of <Phi^2> and <n>                \n\
-       -d: silent data mode (0 = normal, 1 = silent)                \n\
-Monte Carlo simulation of 4d Complex Scalar Field.                  \n\
-Metropolis is used by default.\nUsing the   \n\
-options, the parameters of the simulations must be set for a new run\n\
-(start=0,1).\n",prog);
+Usage: %s  [options]                                         \n\
+       -L: lattice dimension size                            \n\
+       -m: mu (chemical potential)                           \n\
+       -s: start (0 cold, 1 hot)                             \n\
+       -S: seed  (options seed overrides the one in config)  \n\
+       -n: number of measurements of <Phi^2> and <n>         \n\
+       -d: silent data mode (0 = normal, 1 = silent)         \n\
+Monte Carlo simulation of 4d Complex Scalar Field.           \n\
+Metropolis is used by default.\n\
+\n",prog);
 // printed usage message "
   exit(1);
 }/*usage()*/ 
-/* --------------------------  locerr() ---------------------------- */
+
+
+/* --------------------------  locerr() ----------------------- */
 void locerr( char *errmes ){ 
   fprintf(stderr,"%s: %s Exiting....\n",prog,errmes); 
   exit(1); 
 }
-/* --------------------------  simmessage() ------------------------ */
+
+/* ------------------------  simmessage() --------------------- */
 /*print a message about the simulation: */
-
-void simmessage(FILE *fp){
-
-  // char USER[100],HOST[100],MACH[100];
+void simmessage(FILE *fp, options shelloptions){
   time_t t;
 
   time(&t);/* store time in seconds in *t. see: "man 2 time"  */
-  // strcpy(USER,getenv("USER"));
-  // strcpy(MACH,getenv("HOSTTYPE"));
-  // strcpy(HOST,getenv("HOST"));
 
   fprintf(fp,"\
-# ###################################################################\n\
-#   4d Complex Scalar field Model for relativistic Bose gas at finite\n\
-#   chemical potential with Metropolis algorithm on 4box lattice     \n\
-# Run on %s#                                                         \n\
-# L       = %d (Lattice linear dimension, N=L*L)                     \n\
-# seed    = %ld (random number gener. seed)                          \n\
-# nsweeps = %d (No. of sweeps per measurement)                       \n\
-# nmeasur = %d (No. of nmeasurments)                                 \n\
-# mu      = %f (Chemical Potential)                                  \n\
-# start   = %d (0 cold, 1 hot)                                       \n\
+##################################################################\n\
+#   Complex Scalar field Model for relativistic Bose gas at finite\n\
+#   chemical potential - Metropolis algorithm on 4box lattice     \n\
+# Run on %s#                                          \n\
+# L       = %d (Lattice linear dimension, N=L*L*L*L)  \n\
+# seed    = %ld (random number gener. seed)           \n\
+# nmeasur = %d (No. of nmeasurments)                  \n\
+# mu      = %f (Chemical Potential)                   \n\
+# start   = %d (0 cold, 1 hot)                        \n\
 # silent  = %d (0 = normal, 1 = silent)\n",
-          ctime(&t),L,seed,nsweep,nmeasurement, MU,start,silent);
+          ctime(&t), shelloptions.L, shelloptions.seed, shelloptions.nmeasurements, 
+          shelloptions.MU, shelloptions.start, shelloptions.silent);
   fflush(fp);
 }/* message()*/

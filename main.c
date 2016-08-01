@@ -1,27 +1,30 @@
-/************************   main.c ********************************/
-#include "include.h"
+/************************ main.c ************************/
+#include "common.h"
 #include "fields.h"
 #include "options.h"
+#include "met.h"
+#include "measure.h"
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
 
-	int isweep, imeasurement;
-	/*define parameters from options:*/
-	MU=-1.;nsweep=-1;nmeasurement=-1;start=-1; silent=0; seed=9873;
-	get_the_options(argc,argv);
+	// fixed field's parameters
+	double M = 1;
+	double LAMBDA = 1;
 
-	// Create a field / maybe use malloc instead
-	artype phi[L][L][L][L];
+	// user defined shell options
+	options opts;
+	opts = get_the_options(argc, argv);
 
-	// initialize field
-	init(start, phi);
+	// Create a field with the specified parameters
+	field phi = create_field(opts.L, M, LAMBDA, opts.MU);
 
 	// perform metropolis sweeps
-	for(imeasurement=0;imeasurement<nmeasurement;imeasurement++){
-		for(isweep=0;isweep<nsweep;isweep++){
-			met(phi);
-		}
-		measure(phi);
+	int i;
+	for ( i = 0; i < opts.nmeasurements; i++) {
+		met(&phi);	// update the field according to metropolis algorithm
+		measure(phi);	// measure observables
 	}
+
+	destroy_field(&phi);
 
 }

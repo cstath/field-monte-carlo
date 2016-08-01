@@ -1,11 +1,13 @@
-/************************   drandom.c *****************************/
-#include "include.h"
+/************************ drandom.c ************************/
+#include "drandom.h"
 
 #define a 16807
 #define m 2147483647
 #define q 127773
 #define r 2836
 #define conv (1.0/(m-1))
+
+long seed = 9873;
 
 double drandom(){
   long l;
