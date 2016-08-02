@@ -14,7 +14,6 @@ typedef struct options_structure {
 	int L;	// lattice dimentions size
 	double MU;	// chemical potential
 	int silent; // silent output mode
-	int start;	// cold/hot field initial condition
 	int nmeasurements; // number of total measurements
 	long seed;	// seed initial value for the random number generator
 

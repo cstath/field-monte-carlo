@@ -11,16 +11,13 @@ options get_the_options(int argc,char **argv){
 
   options shelloptions;
 
-  if (argc==1) usage();
-  
   strcpy(prog,(char *)basename(argv[0]));
+  if (argc==1) usage();
+
   while (!errflg && (c = getopt(argc, argv, OPTARGS)) != -1){
     switch(c){
       case 'L':
       shelloptions.L  = atoi(optarg);
-      break;
-    case 's':
-      shelloptions.start  = atoi(optarg);
       break;
     case 'S':
       shelloptions.seed   = atol(optarg);
@@ -46,8 +43,6 @@ options get_the_options(int argc,char **argv){
   // Check to see if the shell options given are valid
   if(shelloptions.L     <  1 )
     locerr("L has not been set."   );
-  if(shelloptions.start  < 0 || shelloptions.start > 1)
-    locerr("start has not been set.");
   if(shelloptions.seed  <  0 )
     locerr("seed has not been set.");
   if(shelloptions.MU    <  0 )
@@ -72,7 +67,6 @@ void usage(){
 Usage: %s  [options]                                         \n\
        -L: lattice dimension size                            \n\
        -m: mu (chemical potential)                           \n\
-       -s: start (0 cold, 1 hot)                             \n\
        -S: seed  (options seed overrides the one in config)  \n\
        -n: number of measurements of <Phi^2> and <n>         \n\
        -d: silent data mode (0 = normal, 1 = silent)         \n\
@@ -106,9 +100,8 @@ void simmessage(FILE *fp, options shelloptions){
 # seed    = %ld (random number gener. seed)           \n\
 # nmeasur = %d (No. of nmeasurments)                  \n\
 # mu      = %f (Chemical Potential)                   \n\
-# start   = %d (0 cold, 1 hot)                        \n\
 # silent  = %d (0 = normal, 1 = silent)\n",
           ctime(&t), shelloptions.L, shelloptions.seed, shelloptions.nmeasurements, 
-          shelloptions.MU, shelloptions.start, shelloptions.silent);
+          shelloptions.MU, shelloptions.silent);
   fflush(fp);
 }/* message()*/
