@@ -1,13 +1,43 @@
-# #####################   Makefile.1   #######################
+# #####################   Makefile   ####################### 
 
-OBJS   = main.o fields.o options.o met.o action.c measure.o drandom.o
-CFLAGS = -ggdb3 -Wall -Wextra -std=c99 -pedantic
+# Declaration of variables
+SRCDIR = ./source
+INCLDIR = ./include
+OUTDIR = ./bin
+$(shell mkdir -p $(OUTDIR) >/dev/null)
+DEPDIR = $(OUTDIR)/deps
+$(shell mkdir -p $(DEPDIR) >/dev/null)
+
+CC = gcc
+CC_FLAGS = -std=c99 -ggdb3 -Wall -Wextra -pedantic
 LIBS   = -lm 
 
-metropolis: $(OBJS)
-	$(CC)  $(CFLAGS) $^   -o $@ $(LIBS)
+# File names
+PROGRAM = metropolis
+SRCFILES := $(shell ls $(SRCDIR))
+TMPFILES = $(SRCFILES:.c=.o)
+OBJFILES = $(addprefix $(OUTDIR)/, $(TMPFILES))
+TMPDEPFILES = $(SRCFILES:.c=.d)
+DEPFILES = $(addprefix $(DEPDIR)/, $(TMPDEPFILES))
 
-$(OBJS): common.h met.h measure.h fields.h action.h options.h drandom.h
+# Main target
+$(OUTDIR)/$(PROGRAM): $(OBJFILES)
+	$(CC) $(OBJFILES) -o $@ $(LIBS)
 
+# pull in dependency info for *existing* .o files
+-include $(DEPFILES)
+
+# To obtain object files
+$(OUTDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) -c $(CC_FLAGS) -I$(INCLDIR) $< -o $@ $(LIBS)
+	$(CC) -MM $(CC_FLAGS) -I$(INCLDIR) $< $(LIBS) > $(DEPDIR)/$*.d
+	@mv -f $(DEPDIR)/$*.d $(DEPDIR)/$*.d.tmp
+	@sed -e 's|.*:|$(OUTDIR)/$*.o:|' < $(DEPDIR)/$*.d.tmp > $(DEPDIR)/$*.d
+	@sed -e 's/.*://' -e 's/\\//' < $(DEPDIR)/$*.d.tmp | tr --delete '\n' |\
+	  fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d
+	@rm -f $(DEPDIR)/$*.d.tmp
+
+
+# To remove generated files
 clean:
-	/bin/rm -f *.o metropolis
+	rm -f $(OUTDIR)/$(PROGRAM) $(OBJFILES) $(DEPFILES)
