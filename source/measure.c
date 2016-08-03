@@ -1,10 +1,6 @@
 /************************ measure.c ************************/
 #include "measure.h"
 
-static double AvgFieldSquared(field );
-static double ImgAction(field );
-static artype AvgParticleDensityComplex(field );
-
 // Prints out all the measurements on the scalar field state for the Phase Quenched theory
 void measure(field afield) {
 
@@ -24,7 +20,7 @@ void measure(field afield) {
 }
 
 // Returns the average value of the squared scalar field |Phi|^2_pq
-static double AvgFieldSquared(field afield) {
+double AvgFieldSquared(field afield) {
 
 	int n1, n2, n3, n4;
 	double sum = 0;
@@ -47,12 +43,12 @@ static double AvgFieldSquared(field afield) {
 }
 
 // Returns the imaginary part of the complex Action S
-static double ImgAction(field afield) {
+double ImgAction(field afield) {
 	return cimag(Saction(&afield));
 }
 
 // Returns the average value of the particle density <n>_pq
-static artype AvgParticleDensityComplex(field afield) {
+artype AvgParticleDensityComplex(field afield) {
 
 	int L = afield.L;
 	int N = afield.N;

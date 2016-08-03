@@ -21,6 +21,7 @@ options get_the_options(int argc,char **argv){
       break;
     case 'S':
       shelloptions.seed   = atol(optarg);
+      seed = shelloptions.seed;
       break;
     case 'n':
       shelloptions.nmeasurements = atoi(optarg);
@@ -30,6 +31,7 @@ options get_the_options(int argc,char **argv){
       break;
     case 'd':
       shelloptions.silent = atoi(optarg);
+      silent = shelloptions.silent;
       break;
     case 'h':
       errflg++;/*call usage*/
@@ -49,10 +51,6 @@ options get_the_options(int argc,char **argv){
     locerr("MU has not been set.");
   if(shelloptions.nmeasurements < 0 )
     locerr("nmeasurement has not been set");
-
-  // set global variables
-  silent = shelloptions.silent;
-  seed = shelloptions.seed;
 
   // print out simulation message
   if (!shelloptions.silent) simmessage(stdout, shelloptions);
@@ -101,7 +99,7 @@ void simmessage(FILE *fp, options shelloptions){
 # nmeasur = %d (No. of nmeasurments)                  \n\
 # mu      = %f (Chemical Potential)                   \n\
 # silent  = %d (0 = normal, 1 = silent)\n",
-          ctime(&t), shelloptions.L, shelloptions.seed, shelloptions.nmeasurements, 
+          ctime(&t), shelloptions.L, seed, shelloptions.nmeasurements, 
           shelloptions.MU, shelloptions.silent);
   fflush(fp);
 }/* message()*/
