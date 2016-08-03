@@ -8,8 +8,6 @@
 #include <math.h>
 #include <unistd.h>
 
-typedef double complex artype;
-
 // These are delceared as global variables
 int silent;	// silent output mode
 

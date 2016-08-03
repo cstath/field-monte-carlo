@@ -9,6 +9,9 @@
 #define pwr2(x) ( (x)*(x) )
 #define SIGN(x) (((x) > 0) - ((x) < 0))
 
+// type of the field - complex scalar
+typedef double complex artype;
+
 // this structure hold a field's state on the lattice
 // together with its properties
 typedef struct field_structure {
