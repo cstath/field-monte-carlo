@@ -7,6 +7,7 @@ OUTDIR = ./bin
 $(shell mkdir -p $(OUTDIR) >/dev/null)
 DEPDIR = $(OUTDIR)/deps
 $(shell mkdir -p $(DEPDIR) >/dev/null)
+DOCDIR = ./documentation
 
 CC = gcc
 CC_FLAGS = -std=c99 -ggdb3 -Wall -Wextra -pedantic
@@ -37,7 +38,11 @@ $(OUTDIR)/%.o: $(SRCDIR)/%.c
 	  fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.d
 	@rm -f $(DEPDIR)/$*.d.tmp
 
+# To create the doxygen documentation
+doc:
+	doxygen Doxyfile
 
 # To remove generated files
 clean:
-	rm -f $(OUTDIR)/$(PROGRAM) $(OBJFILES) $(DEPFILES)
+	rm -f $(OUTDIR)/$(PROGRAM) $(OBJFILES) $(DEPFILES) 
+	rm -rf $(DOCDIR)

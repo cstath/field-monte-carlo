@@ -8,8 +8,7 @@ This software was developed as a part of my Master's thesis under the supervisio
 
 In case somebody is interested in the code, feel free to contact me at christos.stathopoulos@gmail.com.
 
-Installation
--
+## Installation ##
 
 Open a command line in linux.
 
@@ -32,3 +31,9 @@ Change into the executable's directory
 Run the program to get usage info
 
 `./metropolis`
+
+## Documentation ##
+
+In order to create an html Doxygen documentation run
+
+`make doc`

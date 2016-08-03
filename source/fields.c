@@ -38,7 +38,7 @@ field create_field(int L, double M, double LAMBDA, double MU) {
 }
 
 // Destroy a Field by freeing the allocated memory of the 4D lattice
-int destroy_field( field *afield) {
+void destroy_field( field *afield) {
 
 	int L = afield->L;
 	artype **** lattice = afield->lattice;
@@ -55,8 +55,6 @@ int destroy_field( field *afield) {
 		free( lattice[n1] );
 	}
 	free( lattice );
-
-	return 0;
 }
 
 //	Return the value of a field by offset of 1 in the mi direction at the
