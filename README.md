@@ -34,6 +34,6 @@ Run the program to get usage info
 
 ## Documentation ##
 
-In order to create an html Doxygen documentation run
+In order to generate an html Doxygen documentation run
 
 `make doc`

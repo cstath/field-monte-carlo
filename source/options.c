@@ -5,7 +5,7 @@ char prog[1024];
 
 /*Get the options function: See "man 3 getopt" for usage*/
 /*Option letters are defined with this string*/
-#define OPTARGS  "hL:m:s:S:n:d:"
+#define OPTARGS  "hL:M:l:m:s:S:n:d:"
 options get_the_options(int argc,char **argv){
   int c,errflg = 0;
 
@@ -15,9 +15,15 @@ options get_the_options(int argc,char **argv){
   if (argc==1) usage();
 
   while (!errflg && (c = getopt(argc, argv, OPTARGS)) != -1){
-    switch(c){
-      case 'L':
+    switch (c) {
+    case 'L':
       shelloptions.L  = atoi(optarg);
+      break;
+    case 'M':
+      shelloptions.M  = atof(optarg);
+      break;
+    case 'l':
+      shelloptions.LAMBDA  = atof(optarg);
       break;
     case 'S':
       shelloptions.seed   = atol(optarg);
@@ -64,6 +70,8 @@ void usage(){
   fprintf(stderr,"\
 Usage: %s  [options]                                         \n\
        -L: lattice dimension size                            \n\
+       -M: M (the field's mass)                              \n\
+       -l: lambda (the field's coupling constant)            \n\
        -m: mu (chemical potential)                           \n\
        -S: seed  (options seed overrides the one in config)  \n\
        -n: number of measurements of <Phi^2> and <n>         \n\
@@ -95,11 +103,13 @@ void simmessage(FILE *fp, options shelloptions){
 #   chemical potential - Metropolis algorithm on 4box lattice     \n\
 # Run on %s#                                          \n\
 # L       = %d (Lattice linear dimension, N=L*L*L*L)  \n\
+# M       = %f (field's mass)                         \n\
+# lambda  = %f (field's coupling constant)            \n\
 # seed    = %ld (random number gener. seed)           \n\
 # nmeasur = %d (No. of nmeasurments)                  \n\
 # mu      = %f (Chemical Potential)                   \n\
 # silent  = %d (0 = normal, 1 = silent)\n",
-          ctime(&t), shelloptions.L, seed, shelloptions.nmeasurements, 
+          ctime(&t), shelloptions.L, shelloptions.M, shelloptions.LAMBDA, seed, shelloptions.nmeasurements, 
           shelloptions.MU, shelloptions.silent);
   fflush(fp);
 }/* message()*/

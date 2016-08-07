@@ -7,16 +7,12 @@
 
 int main(int argc, char **argv) {
 
-	// fixed field's parameters
-	double M = 1;
-	double LAMBDA = 1;
-
 	// user defined shell options
 	options opts;
 	opts = get_the_options(argc, argv);
 
 	// Create a field with the specified parameters
-	field phi = create_field(opts.L, M, LAMBDA, opts.MU);
+	field phi = create_field(opts.L, opts.M, opts.LAMBDA, opts.MU);
 
 	// perform metropolis sweeps
 	int i;

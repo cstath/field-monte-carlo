@@ -18,6 +18,8 @@
 typedef struct options_structure {
 
 	int L;	///< lattice dimentions size
+	double M; ///< field's mass
+	double LAMBDA; ///< field's coupling constant
 	double MU;	///< chemical potential
 	int silent; ///< silent output mode
 	int nmeasurements; ///< number of total measurements
